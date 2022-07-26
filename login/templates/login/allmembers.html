@@ -1,0 +1,34 @@
+{% extends 'login/basic.html' %}
+{% block title %}Our members{% endblock title %}
+{% block exploreactive %}active{% endblock exploreactive %}
+<style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    </style>
+{% block body %}
+
+<div class="container my-5 px-2">
+    <table class="table">
+        <thead>
+      <tr>
+        <th>Profile</th>
+        <th>Username</th>
+        <th>email</th>
+        <th>team Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in allmember %}
+      <tr>
+        <td><img src="/media/{{member.profilePic}}" width="70px" height="60px"></td>
+        <td>{{member.userName}}</td>
+        <td>{{member.email}}</td>
+        <td>{{member.teamName}}</td>
+      </tr>
+      {% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock body %}

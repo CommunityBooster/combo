@@ -1,0 +1,76 @@
+{% extends 'login/basic.html' %}
+{% block title %}Approval of count{% endblock title %}
+{% block body %}
+
+<style>
+    img {
+        border: 5px solid #555;
+    }
+    table, th, td {
+        border: 1px solid black;
+      }
+
+
+</style>
+<form action="/approval" method="post">{% csrf_token %}
+
+    <div class="row g-2">
+        <div class="col-md">
+            <div class="form-floating">
+                <input type="date" class="form-control" id="floatingInputGrid" name="date">
+                <label for="floatingInputGrid">Shift Date</label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating">
+                <select name="serverName" class="form-select" id="floatingSelectGrid">
+                    <option selected>Server Name</option>
+                    {% for server in serverLst %}
+                    <option value="{{server}}">{{server}}</option>
+                    {% endfor %}
+                </select>
+                <label for="floatingSelectGrid">Select your server</label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating-right">
+                <button type="submit" class="btn btn-primary mx-5 my-2" id="floatingInputGrid">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+<br><br>
+<!-- tables  -->
+
+<table class="table" id='table1'>
+    <thead>
+        <tr>
+            <th scope="col">User name</th>
+            <th scope="col">Starting</th>
+            <th scope="col">Ending</th>
+            <th scope="col">Bonus</th>
+            <th scope="col">Comment</th>
+            <th scope="col">Starting Screenshot</th>
+            <th scope="col">Ending Screenshot</th>
+            <th scope="col">Button</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for query in queryset %}
+        <tr>
+            <th scope="row">{{query.userName}}</th>
+            <td>{{query.startingCount}}</td>
+            <td>{{query.endingCount}}</td>
+            <td>{{query.isbonus}}</td>
+            <td>{{query.commentText}}</td>
+            <td><img class='cropped' src="/media/{{query.startingCountScreenShot}}" width="300px" height="500px"></td>
+            <td><img class='cropped' src="/media/{{query.endingCountScreenShot}}" width="300px" height="500px"></td>
+            <td><a href="approval/{{query.slug}}" type="button" class="btn btn-primary mx-5 my-2">disapprove</a</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}

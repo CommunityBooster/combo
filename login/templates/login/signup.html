@@ -1,0 +1,27 @@
+{% extends 'login/basic.html' %}
+{% block title %}index 2{% endblock title %}
+{% block body %}
+
+{% comment %} body starts here {% endcomment %}
+{% comment %} form start here {% endcomment %}
+
+{% comment %} message {% endcomment %}
+
+
+
+<div class="container my-7 px-2">
+  <h3>Sign up</h3>
+  {% if submit %}
+  Your form was submitted succesfully
+
+  {% else %}
+  <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+    {{form.as_p}}
+
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+  {% endif %}
+</div>
+
+{% endblock body %}

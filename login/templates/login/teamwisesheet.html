@@ -1,0 +1,40 @@
+{% extends 'login/basic.html' %}
+{% block title %}Team Wise Count{% endblock title %}
+{% block exploreactive %}active{% endblock exploreactive %}
+{% block body %}
+
+<div class="container">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Normal</th>
+            <th scope="col">Bonus</th>
+            <th scope="col">Ghosted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Team Asnad</th>
+            <td>32</td>
+            <td>34</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th scope="row">Team Prateek</th>
+            <td>32</td>
+            <td>34</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th scope="row">Team Abhimanyu</th>
+            <td>32</td>
+            <td>34</td>
+            <td>1</td>
+          </tr>
+
+        </tbody>
+      </table>
+</div>
+
+{% endblock body %}

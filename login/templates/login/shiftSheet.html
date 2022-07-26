@@ -1,0 +1,66 @@
+{% extends 'login/basic.html' %}
+{% block title %}Shift Sheet{% endblock title %}
+{% block sheetsactive %}active{% endblock sheetsactive %}
+
+{% block body %}
+
+<div class="container my-5 px-2">
+    <form action="/shiftSheet" method="post">{% csrf_token %}
+        <div class="container">
+            <div class="form-group mx-5 my-3">
+                <div class="form-group mx-5 my-3">
+                    <label class="my-3" for="date">Date</label>
+                    <input type="date" id="date" name="date">
+                </div>
+                <label class="form-group mx-5 my-3" for="servers">Choose the server from - {{serverLst}}</label>
+                <div class="form-group mx-5 my-3">
+                    <select name="serverName" id="forserver" size="4" multiple>
+                        {% for server in serverLst %}
+                        <option value="{{server}}">{{server}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mx-5 my-3">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% comment %} table start here {% endcomment %}
+{% if alldata is none %}
+
+{% else %}
+<div class="container my-5 px-2">
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+        <th scope="col">Username</th>
+        <th scope="col">server</th>
+        <th scope="col">Starting count</th>
+        <th scope="col">Ending count</th>
+        <th scope="col">Team</th>
+        <th scope="col">Ghosted</th>
+        <th scope="col">Bonus</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      {% for data in alldata %}
+      <tr>
+        <th scope="row">{{data.date}}</th>
+        <td>{{data.shiftTime}}</td>
+        <td>{{data.userName}}</td>
+        <td>{{data.serverName}}</td>
+        <td>{{data.startingCount}}</td>
+        <td>{{data.endingCount}}</td>
+        <td>{{data.teamName}}</td>
+        <td>{{data.isghosted}}</td>
+        <td>{{data.isbonus}}</td>
+      </tr>{% endfor %}
+
+    </tbody>
+  </table>
+</div>{% endif %}
+{% endblock %}

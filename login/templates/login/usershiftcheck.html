@@ -1,0 +1,43 @@
+{% extends 'login/basic.html' %}
+{% block title %}User Shifts{% endblock title %}
+{% block isuseractive %}active{% endblock isuseractive %}
+{% block body %}
+{% if alldata is none %}
+
+{% else %}
+
+<div class="container my-5 px-2">
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">server</th>
+        <th scope="col">Time</th>
+        <th scope="col">Username</th>
+        <th scope="col">Starting count</th>
+        <th scope="col">Ending count</th>
+        <th scope="col">Team</th>
+        <th scope="col">Ghosted</th>
+        <th scope="col">Bonus</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      {% for data in alldata %}
+      <tr>
+        <th scope="row">{{data.date}}</th>
+        <td>{{data.serverName}}</td>
+        <td>{{data.shiftTime}}</td>
+        <td>{{data.userName}}</td>
+        <td>{{data.startingCount}}</td>
+        <td>{{data.endingCount}}</td>
+        <td>{{data.teamName}}</td>
+        <td>{{data.isghosted}}</td>
+        <td>{{data.isbonus}}</td>
+      </tr>{% endfor %}
+
+    </tbody>
+  </table>
+</div>{% endif %}
+
+{% endblock body %}

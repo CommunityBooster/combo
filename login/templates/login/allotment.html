@@ -1,0 +1,33 @@
+{% extends 'login/basic.html' %}
+{% block title %}Shift Allotment{% endblock title %}
+{% block formsactive %}active{% endblock formsactive %}
+{% block body %}
+
+<div class="container my-5 px-2">
+    <form action="/allotment" method="post">{% csrf_token %}
+        <div class="container">
+            <div class="form-group mx-5 my-3">
+                <div class="form-group mx-5 my-3">
+                    <label class="my-3" for="date">Date</label>
+                    <input type="date" id="date" name="date">
+                </div>
+                <label class="form-group mx-5 my-3" for="servers">Choose the server from - {{serverLst}}</label>
+                <div class="form-group mx-5 my-3">
+                    <select name="serverName" id="forserver" size="4" multiple>
+                        {% for server in serverLst %}
+                        <option value="{{server}}">{{server}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mx-5 my-3">
+
+                    <label for="shiftTime">Shift Time - type in correct format or will be taken as invalid</label>
+                    <input name="shiftTime" type="shiftTime" class="form-control" id="shiftTime"
+                        aria-describedby="shiftTime" placeholder="In HH:MM - HH:MM format - (12:00-13:00)">
+                </div>
+                <button type="submit" class="btn btn-primary mx-5 my-3">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock body %}
