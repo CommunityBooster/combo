@@ -134,7 +134,7 @@ def handlelogout(request):
 def allotment(request):
 
     # getting server data from JSON file 
-    with open("E:/dhruv/booster community/website/boostercommunity/login/shiftTime.json",'r') as st:
+    with open("login/shiftTime.json",'r') as st:
         serverDictFromJson=json.load(st)
         # server list 
         serverLst=list(serverDictFromJson.keys())
