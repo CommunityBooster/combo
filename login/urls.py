@@ -34,4 +34,5 @@ urlpatterns = [
     path('userpanel',views.userpanel,name='userpanel'),
     path('usershiftcheck',views.usershiftcheck,name='usershiftcheck'),
     path('teamwisesheet',views.teamwisesheet,name='teamwisesheet'),
+    path('staffpanel',views.staffpanel,name='staffpanel'),
 ]

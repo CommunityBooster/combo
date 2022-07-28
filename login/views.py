@@ -484,3 +484,6 @@ def usershiftcheck(request):
 def teamwisesheet(request):
     return render(request,'login/teamwisesheet.html')
 
+def staffpanel(request):
+    return render(request,'login/staffpanel.html')
+

@@ -159,6 +159,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 <li><a class="dropdown-item" href="/userpanel">User Panel</a></li>
+                {% if request.user.is_staff %}<li><a class="dropdown-item" href="/staffpanel">Staff Panel</a></li>{% endif %}
                 <li>
                   <hr class="dropdown-divider">
                 </li>
