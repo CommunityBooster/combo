@@ -13,7 +13,7 @@ class userForm(ModelForm):
         
         widgets={
             'userName':forms.TextInput(attrs={'class':"form-control",'placeholder':"Enter Your User Name"}),
-            'email':forms.TextInput(attrs={'class':"form-control",'placeholder':'Enter your email'}),
+            'email':forms.EmailField(attrs={'class':"form-control",'placeholder':'Enter your email'}),
             'phone':forms.TextInput(attrs={'class':"form-control",'placeholder':'Enter your phone number'}),
             'teamName':forms.TextInput(attrs={'class':"form-control",'placeholder':'Enter your Team Name'}),
             'dateOfBirth':forms.TextInput(attrs={'class':"form-control",'placeholder':'Enter your Date of birth'}),
