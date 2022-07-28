@@ -185,7 +185,7 @@ def allotment(request):
         # only the top 3 shift will be stored in serverSheet
         # serverSheetUpdate('insert',serverName,date,shiftTime,userName)
         # getting server data from JSON file 
-        with open("E:/dhruv/booster community/website/boostercommunity/login/shiftTime.json",'r') as st:
+        with open("login/shiftTime.json",'r') as st:
             serverDictFromJson=json.load(st)
             updatedShiftTime=splitLst(serverDictFromJson[f'{serverName}'])
 
@@ -209,7 +209,7 @@ def allotment(request):
 
 def shiftSheet(request):
     # getting server data from JSON file 
-    with open("E:/dhruv/booster community/website/boostercommunity/login/shiftTime.json",'r') as st:
+    with open("login/shiftTime.json",'r') as st:
         serverDictFromJson=json.load(st)
         # server list 
         serverLst=list(serverDictFromJson.keys())
@@ -255,7 +255,7 @@ def shiftSheet(request):
 
 def replacement(request):
     # getting server data from JSON file 
-    with open("E:/dhruv/booster community/website/boostercommunity/login/shiftTime.json",'r') as st:
+    with open("login/shiftTime.json",'r') as st:
         serverDictFromJson=json.load(st)
         # server list 
         serverLst=list(serverDictFromJson.keys())
@@ -332,7 +332,7 @@ def countsub(request):
 
 
     # getting server data from JSON file 
-    with open("E:/dhruv/booster community/website/boostercommunity/login/shiftTime.json",'r') as st:
+    with open("login/shiftTime.json",'r') as st:
         serverDictFromJson=json.load(st)
         # server list 
         serverLst=list(serverDictFromJson.keys())
@@ -433,7 +433,7 @@ def allmembers(request):
 
 def approval(request):
     # getting server data from JSON file 
-    with open("E:/dhruv/booster community/website/boostercommunity/login/shiftTime.json",'r') as st:
+    with open("login/shiftTime.json",'r') as st:
         serverDictFromJson=json.load(st)
         # server list 
         serverLst=list(serverDictFromJson.keys())
