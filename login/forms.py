@@ -1,6 +1,5 @@
 from django import forms
 from django.forms import ModelForm
-from numpy import short
 from .models import serverSheet, userInfo,shiftAllotment,screenShot
 
 

@@ -1,7 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.http import HttpResponse,HttpResponseRedirect
-from numpy import insert
 from .models import userInfo,shiftAllotment,serverSheet,screenShot
 from .forms import userForm,shiftAllotmentForm,screenShotForm
 from django.contrib.auth import authenticate,login,logout
