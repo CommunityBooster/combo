@@ -10,7 +10,7 @@ class userInfo(models.Model):
     sno=models.AutoField
     userName=models.CharField(max_length=70)
     email=models.CharField(max_length=50)
-    phone=models.IntegerField(default=0)
+    phone=models.BigIntegerField(default=0)
     teamName=models.CharField(max_length=20)
     dateOfBirth=models.CharField(max_length=30)
     profilePic=models.ImageField(upload_to="profilePic")
