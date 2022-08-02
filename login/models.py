@@ -41,10 +41,11 @@ class serverSheet(models.Model):
     startingCount=models.IntegerField(blank=True,editable=True,null=True)
     endingCount=models.IntegerField(blank=True,editable=True,null=True)
     teamName=models.CharField(max_length=50,blank=True,editable=True,null=True)
-    isghosted=models.CharField(max_length=50,blank=True,editable=True,null=True)
+    isghosted=models.CharField(max_length=50,blank=True,editable=True,null=True,default="yes")
     isbonus=models.CharField(max_length=50,blank=True,editable=True,null=True)
     commentText=models.CharField(max_length=500,default='')
     approval=models.CharField(max_length=10,blank=True,editable=True,null=True,default='')
+    balanceCheck=models.CharField(max_length=10,blank=True,editable=True,null=True,default='no')
     startingCountScreenShot=models.ImageField(upload_to="startingScreenShot",null=True,default="")
     endingCountScreenShot=models.ImageField(upload_to="endingingScreenShot",null=True,default="")
     slug=models.CharField(max_length=120,default="",blank=True,editable=True,null=True)
@@ -66,3 +67,20 @@ class screenShot(models.Model):
 
     def __str__(self):
         return self.userName+" "+self.serverName+" "+self.shiftTime
+
+# payment history
+class balanceHistory(models.Model):
+    sno=models.AutoField(primary_key=True)
+    userName=models.CharField(max_length=40)
+    lastPaymentDate=models.CharField(max_length=50)
+    weekNormal=models.CharField(max_length=15)
+    weekBonus=models.CharField(max_length=15)
+    weekGhosted=models.CharField(max_length=15)
+    weekBalance=models.CharField(max_length=15)
+    checkerUsername=models.CharField(max_length=50)
+    commentText=models.CharField(max_length=500,default='')
+    timestamp=models.DateTimeField(default=now)
+
+
+    def __str__(self):
+        return self.userName

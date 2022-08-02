@@ -35,4 +35,5 @@ urlpatterns = [
     path('usershiftcheck',views.usershiftcheck,name='usershiftcheck'),
     path('teamwisesheet',views.teamwisesheet,name='teamwisesheet'),
     path('staffpanel',views.staffpanel,name='staffpanel'),
+    path('balance',views.balance,name='balance'),
 ]

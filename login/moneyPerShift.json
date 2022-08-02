@@ -1,0 +1,13 @@
+{
+    "onteco":{"normal":40,
+    "bonus":50,
+    "ghosted":25},
+
+    "wayc":{"normal":40,
+    "bonus":50,
+    "ghosted":25},
+
+    "money shark":{"normal":40,
+    "bonus":50,
+    "ghosted":25}
+}

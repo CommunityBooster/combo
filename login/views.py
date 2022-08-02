@@ -1,18 +1,23 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.http import HttpResponse,HttpResponseRedirect
-from .models import userInfo,shiftAllotment,serverSheet,screenShot
+from .models import userInfo,shiftAllotment,serverSheet,screenShot,balanceHistory
 from .forms import userForm,shiftAllotmentForm,screenShotForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 import json
-import datetime
+from datetime import datetime,timedelta
+import schedule
+
   
 
 # defining function 
 
+ 
+
+
 # to update and insert the main sheet/model that is serverSheet
-def serverSheetUpdate(work,serverName,date,shiftTime,userName,startingCount='',endingCount='',isghosted="",isbonus="",commentText='',classModel=serverSheet):
+def serverSheetUpdate(work,serverName,date,shiftTime,userName,startingCount='',endingCount='',isghosted="yes",isbonus="",commentText='',classModel=serverSheet):
     # getting team name 
     teamNameQuery=userInfo.objects.filter(userName=userName).values('teamName').first()
     teamName=teamNameQuery['teamName']
@@ -30,12 +35,7 @@ def serverSheetUpdate(work,serverName,date,shiftTime,userName,startingCount='',e
     
     # to update data in already alloted users 
     elif work == "update":
-        serverSheet=classModel.objects.filter(date=date,serverName=serverName,shiftTime=shiftTime,userName=userName).update(startingCount=startingCount,endingCount=endingCount,isbonus=isbonus,isghosted=isghosted,teamName=teamName,commentText=commentText,approval=approval,slug=slug,timestamp=datetime.datetime.now())
-        # serverSheet.save()
-    
-# serverSheetUpdate('update','wayc','2022-07-14','17:30-20:00',"dhruv",123,232,'yes','yes')
-# serverSheet.objects.filter(date='2022-07-14',serverName='wayc',shiftTime='17:30-20:00',userName="dhruv",teamName=teamName).update(startingCount=startingCount,endingCount=endingCount,isbonus=isbonus,isghosted=isghosted)
-
+        serverSheet=classModel.objects.filter(date=date,serverName=serverName,shiftTime=shiftTime,userName=userName).update(startingCount=startingCount,endingCount=endingCount,isbonus=isbonus,isghosted=isghosted,teamName=teamName,commentText=commentText,approval=approval,slug=slug,timestamp=datetime.now())
 
 
 # to replace the shift from one to another 
@@ -52,10 +52,6 @@ def serverSheetReplace(serverName,date,shiftTime,userName,replacedUserName,class
     serverSheet=classModel.objects.filter(date=date,serverName=serverName,shiftTime=shiftTime,userName=userName).update(userName=replacedUserName,teamName=teamName,slug=slug)
 
 
-# serverSheetUpdate('update','onteco','2022-07-12','21:00-23:00',"dhruv",123,231,'asnad','yes','yes')
-# serverSheetReplace('onteco','2022-07-12','21:00-23:00','kabradhruv','kabradhruv1')
-
-
 # to remove all the bonus 
 def splitLst(listofshifttime):
     for i in listofshifttime:
@@ -64,6 +60,103 @@ def splitLst(listofshifttime):
         listofshifttime[ind]=i1
     return listofshifttime
 
+# shiftFromLast3Days=serverSheet.objects.filter(balanceCheck="no",isghosted="yes",timestamp__gte=datetime.now()-timedelta(days=3))
+# print(shiftFromLast3Days)
+
+# to update the weekBalance of balanceHistory 
+def updateWeekBalance(userName):
+    query=balanceHistory.objects.filter(userName=userName).values('weekNormal','weekBonus',"weekGhosted")
+    # Normal=(balanceHistory.objects.filter(userName=userName).values_list('weekNormal',flat=True))
+    # Bonus=(list(balanceHistory.objects.filter(userName=userName).values_list('weekBonus',flat=True)))
+    # Ghosted=(list(balanceHistory.objects.filter(userName=userName).values_list('weekGhosted',flat=True)))
+    print("------------------------------------",query)
+    # query=int(query[0]["weekNormal"])
+    # print("------------------------------------",(int(query[0]["weekNormal"])))
+    try:
+        Normal=int(query[0]["weekNormal"]) or 0
+        Bonus=int(query[0]["weekBonus"])or 0
+        Ghosted=int(query[0]["weekGhosted"]) or 0
+    except Exception as e:
+        print(e)
+    # print("------------------------------------",type(Normal))
+    weekBalance=(Normal+Bonus)-Ghosted
+    balanceHistory.objects.filter(userName=userName).update(weekBalance=weekBalance)
+
+# updateWeekBalance('dhruv')
+
+
+# to update balance of every user after 24hours if ghosting is done
+def updateGhostingBalance():
+    # datex = datetime.now().strftime("%Y-%m-%d")
+
+    shiftFromLast3Days=serverSheet.objects.filter(balanceCheck="no",isghosted="yes",timestamp__gte=datetime.now()-timedelta(days=1,hours=12)).values_list('slug',flat=True)
+    print("-------------+==============",shiftFromLast3Days)
+
+    if len(shiftFromLast3Days)!=0:
+        for i in shiftFromLast3Days:    
+            # print("---------------++---------------------",i)
+            serverSheet.objects.filter(slug=i).update(balanceCheck="yes")
+            """
+            morecode to write from here
+            """
+            slugSplit=i.split('_')
+            serverName=slugSplit[0]
+            serverDate=slugSplit[1]
+            shiftTime=slugSplit[2]
+            userName=slugSplit[3]
+
+                # getting server data from JSON file 
+            with open("login/moneyPerShift.json",'r') as st:
+                moneyDict=json.load(st)
+
+            if len(balanceHistory.objects.filter(userName=userName))==0:
+                ghosted=moneyDict[serverName]["ghosted"]
+                newbalance=balanceHistory(userName=userName,weekNormal=0,weekBonus=0,weekGhosted=ghosted,checkerUsername="yes")
+                newbalance.save()
+            else:
+                weekGhosted=list(balanceHistory.objects.filter(userName=userName).values_list('weekGhosted',flat=True))
+                ghosted=moneyDict[serverName]["ghosted"]+int(weekGhosted[0])
+                replaceBalance=balanceHistory.objects.filter(userName=userName).update(weekGhosted=ghosted,checkerUsername="notDefinedByDhruv")
+
+            updateWeekBalance(userName)
+
+    else:
+        pass
+
+# schedule.every().hour.do(updateGhostingBalance)
+print("-=-=-=-=-=","schedules")
+# schedule.every(10).seconds.do(updateGhostingBalance)
+updateGhostingBalance()
+
+
+
+def updateBalance(serverDate,shiftTime,serverName,userName):
+    # getting server data from JSON file 
+    with open("login/moneyPerShift.json",'r') as st:
+        moneyDict=json.load(st)
+
+    if (serverSheet.objects.filter(date=serverDate,shiftTime=shiftTime,userName=userName,serverName=serverName).values_list("balanceCheck",flat=True))[0] == "no":
+        serverSheet.objects.filter(date=serverDate,shiftTime=shiftTime,userName=userName,serverName=serverName).update(balanceCheck='yes')
+        if len(balanceHistory.objects.filter(userName=userName))==0:
+            normal=len(serverSheet.objects.filter(date=serverDate,shiftTime=shiftTime,serverName=serverName,userName=userName,isbonus="no",isghosted="no"))*moneyDict[serverName]["normal"]
+            bonus=len(serverSheet.objects.filter(date=serverDate,shiftTime=shiftTime,serverName=serverName,userName=userName,isbonus="yes",isghosted="no"))*moneyDict[serverName]["bonus"]
+            ghosted=0
+            newbalance=balanceHistory(userName=userName,lastPaymentDate="1st week",weekNormal=normal,weekBonus=bonus,weekGhosted=ghosted,checkerUsername="yes",commentText="1st week checked")
+            newbalance.save()
+        else:
+            weekNormal=list(balanceHistory.objects.filter(userName=userName).values_list('weekNormal',flat=True))
+            weekBonus=list(balanceHistory.objects.filter(userName=userName).values_list('weekBonus',flat=True))
+            normal=len(serverSheet.objects.filter(date=serverDate,shiftTime=shiftTime,serverName=serverName,userName=userName,isbonus="no",isghosted="no"))*moneyDict[serverName]["normal"]+int(weekNormal[0])
+            bonus=len(serverSheet.objects.filter(date=serverDate,shiftTime=shiftTime,serverName=serverName,userName=userName,isbonus="yes",isghosted="no"))*moneyDict[serverName]["bonus"]+int(weekBonus[0])
+            
+            
+            replaceBalance=balanceHistory.objects.filter(userName=userName).update(weekNormal=normal,weekBonus=bonus,checkerUsername="notDefinedByDhruv")
+
+    updateWeekBalance(userName)
+
+
+# print("------------------------------------------------",loggedInUsername)
+# updateBalance("2022-08-01","04:00-08:00","money shark","dhruv")
 
 # Create your views here.
 
@@ -345,7 +438,7 @@ def countsub(request):
         userName=request.user
         startingCount=request.POST.get('startingCount')
         endingCount=request.POST.get('endingCount')
-        isghosted="No"
+        isghosted="no"
         commentText=request.POST.get('commentText')
     
         # getting the result if the field is bonus or not
@@ -359,15 +452,14 @@ def countsub(request):
             if i0==shiftTime:
                 if len(i.split('$'))==2:
                     if i1=='bonus':
-                        isbonus="Yes"
+                        isbonus="yes"
                         break
                 else:
-                    isbonus="No"
+                    isbonus="no"
             else:
                 pass
 
 
-        print(userName,startingCount,endingCount,commentText,isbonus,isghosted)
 
         # checks------- for the variable to be stored 
 
@@ -420,6 +512,7 @@ def countsub(request):
         except Exception as e:
             messages.warning(request,f"An error occured {e}")
 
+        updateBalance(shiftDate,shiftTime,serverName,userName)
         
         return redirect('countsub')
     else:
@@ -468,7 +561,7 @@ def approval(request):
 def disapproval(request,slug):
     slugSplit=slug.split('_')
     print('==============================',slugSplit)
-    serverSheet.objects.filter(serverName=slugSplit[0],date=slugSplit[1],shiftTime=slugSplit[2],userName=slugSplit[3]).update(approval='No')
+    serverSheet.objects.filter(serverName=slugSplit[0],date=slugSplit[1],shiftTime=slugSplit[2],userName=slugSplit[3]).update(approval='no')
     return redirect('approval')
 
 def userpanel(request):
@@ -486,4 +579,7 @@ def teamwisesheet(request):
 
 def staffpanel(request):
     return render(request,'login/staffpanel.html')
+
+def balance(request):
+    return render(request,'login/balance.html')
 

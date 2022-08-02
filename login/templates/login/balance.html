@@ -1,0 +1,53 @@
+{% extends 'login/basic.html' %}
+{% block title %}User Panel{% endblock title %}
+{% block isuseractive %}active{% endblock isuseractive %}
+{% block body %}
+
+<!-- <h1 mx-3 my-4>Your total balance is - 54</h1>  -->
+<div class="col-lg-12">
+    <div class="right-content">
+        <h4>Your total balance</h4>
+        <ul class="list">
+            <li>Last Payment - Date</li>
+            <li>Balance till Now</li>
+            <li>Next Payment date-</li>
+        </ul>
+    </div>
+</div>
+
+<table class="table table-dark table-striped-columns table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Payment Date</th>
+            <th scope="col">Balance till Now</th>
+            <th scope="col">Normal</th>
+            <th scope="col">Bonus</th>
+            <th scope="col">Ghosted</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+            <td>@mdo</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Larry the Bird</td>
+            <td>@twitter</td>
+            <td>@twitter</td>
+            <td>@twitter</td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock body %}

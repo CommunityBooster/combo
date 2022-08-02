@@ -1,7 +1,63 @@
-a='21:00-23:00$'
-b=a.split('$')
-b1=a.split('$')[1]
-if b1:
-    print(b1)
-else:
-    print(b)
+# Schedule Library imported
+import json
+import schedule
+import time
+from datetime import datetime,timedelta
+
+
+# Functions setup
+def sudo_placement():
+    print("second")
+
+
+def good_luck():
+    print("Good Luck for Test")
+
+
+def work():
+    print("Study and work hard")
+
+
+def bedtime():
+    print("It is bed time go rest")
+
+
+def geeks():
+    print("Seconds")
+
+
+# Task scheduling
+# After every 10mins geeks() is called.
+schedule.every(10000).seconds.do(geeks)
+
+# After every hour geeks() is called.
+schedule.every().hour.do(geeks)
+
+# Every day at 12am or 00:00 time bedtime() is called.
+schedule.every().day.at("00:00").do(bedtime)
+
+# After every 5 to 10mins in between run work()
+schedule.every(5).to(10).minutes.do(work)
+
+# Every monday good_luck() is called
+schedule.every().monday.do(good_luck)
+
+# Every tuesday at 18:00 sudo_placement() is called
+schedule.every().tuesday.at("18:00").do(sudo_placement)
+
+# datex = datetime.datetime.now().strftime("%Y-%m-%d")
+# print(datex)
+# Loop so that the scheduling task
+# keeps on running all time.
+# while True:
+#     # Checks whether a scheduled task
+#     # is pending to run or not
+#     schedule.run_pending()
+#     time.sleep(1)
+
+# calculating end date by adding 10 days
+Enddate = datetime.strptime("2022-07-30", "%Y-%m-%d") + timedelta(days=10)
+  
+with open("login/moneyPerShift.json",'r') as st:
+    moneyDict=json.load(st)
+print(moneyDict['onteco']['normal'])
